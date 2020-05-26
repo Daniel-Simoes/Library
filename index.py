@@ -31,6 +31,13 @@ class Book:
 
         ttk.Button(frame, text='Register').grid(row=5, columnspan=2, stick=W+E)
 
+        self.tree = ttk.Treeview(height=10, columns=("#0", "#1", "#2"))
+        self.tree.grid(row=4, column=0, columnspan=2)
+        self.tree.heading('#0', text='Title')
+        self.tree.heading('#1', text='Author')
+        self.tree.heading('#2', text='Genre')
+        self.tree.heading('#3', text='Status')
+
 
 if __name__ == "__main__":
     window = Tk()
