@@ -10,7 +10,7 @@ class Book:
 
     def __init__(self, window):
         self.wind = window
-        self.wind.title("New Register1")
+        self.wind.title("MyLibrary")
 
         frame = LabelFrame(self.wind, text='Register a new book :')
         frame.grid(row=0, column=0, columnspan=3, pady=20)
@@ -36,10 +36,10 @@ class Book:
 
         self.tree = ttk.Treeview(height=10, columns=("#0", "#1", "#2"))
         self.tree.grid(row=4, column=0, columnspan=2)
-        self.tree.heading('#0', text='Title')
-        self.tree.heading('#1', text='Author')
-        self.tree.heading('#2', text='Genre')
-        self.tree.heading('#3', text='Status')
+        self.tree.heading('#0', text='Title', anchor=W)
+        self.tree.heading('#1', text='Author', anchor=W)
+        self.tree.heading('#2', text='Genre', anchor=W)
+        self.tree.heading('#3', text='Status', anchor=W)
 
         self.viewing_records()
 
@@ -54,10 +54,17 @@ class Book:
         records = self.tree.get_children()
         for element in records:
             self.tree.delete(element)
-        query = 'SELECT * FROM book ORDER BY title DESC'
+        query = 'SELECT * FROM books'
         db_rows = self.run_query(query)
         for row in db_rows:
-            self.tree.insert('', 0, text=row[1], values=row[2])
+            self.tree.insert('', 2, text=row[1], values=(
+                row[2], row[3], row[4]))
+
+        def validation(self):
+            return
+            len(self.title.get, self.author.get()) != 0,
+            # len(self.genre.get()) != 0,
+            # len(self.status.get())
 
 
 if __name__ == "__main__":
