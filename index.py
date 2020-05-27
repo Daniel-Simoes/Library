@@ -43,6 +43,9 @@ class Book:
         self.tree.heading('#2', text='Genre', anchor=W)
         self.tree.heading('#3', text='Status', anchor=W)
 
+        ttk.Button(frame, text='Delete', command=self.deleting).grid(
+            row=7, column=0)
+
         self.viewing_records()
 
     def run_query(self, query, parameters=()):
@@ -80,6 +83,22 @@ class Book:
             self.status.delete(0, END)
         else:
             self.message['text'] = 'Sorry, all fields are required!'
+        self.viewing_records()
+
+    def deleting(self):
+
+        self.message['text'] = ''
+        try:
+            self.tree.item(self.tree.selection())['text']
+        except IndexError as e:
+            self.message['text'] = 'please, you need chosen a book to delete'
+            return
+        self.message['text'] = ''
+        title = self.tree.item(self.tree.selection())['text']
+        query = 'DELETE FROM books WHERE title=?'
+        self.run_query(query, (title,))
+        self.message['text'] = 'The Book {} was deleted'.format(title)
+
         self.viewing_records()
 
 
