@@ -6,6 +6,8 @@ import sqlite3
 
 class Book:
 
+    db_name = 'database.db'
+
     def __init__(self, window):
         self.wind = window
         self.wind.title("New Register1")
@@ -29,7 +31,8 @@ class Book:
         self.status = Entry(frame)
         self.status.grid(row=4, column=1)
 
-        ttk.Button(frame, text='Register').grid(row=5, columnspan=2, stick=W+E)
+        ttk.Button(frame, text='Register').grid(
+            row=5, columnspan=2, stick=W+E)
 
         self.tree = ttk.Treeview(height=10, columns=("#0", "#1", "#2"))
         self.tree.grid(row=4, column=0, columnspan=2)
@@ -37,6 +40,24 @@ class Book:
         self.tree.heading('#1', text='Author')
         self.tree.heading('#2', text='Genre')
         self.tree.heading('#3', text='Status')
+
+        self.viewing_records()
+
+    def run_query(self, query, parameters=()):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            query_result = cursor.execute(query, parameters)
+            conn.commit()
+            return query_result
+
+    def viewing_records(self):
+        records = self.tree.get_children()
+        for element in records:
+            self.tree.delete(element)
+        query = 'SELECT * FROM book ORDER BY title DESC'
+        db_rows = self.run_query(query)
+        for row in db_rows:
+            self.tree.insert('', 0, text=row[1], values=row[2])
 
 
 if __name__ == "__main__":
