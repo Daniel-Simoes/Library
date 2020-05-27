@@ -114,13 +114,20 @@ class Book:
         old_status = self.tree.item(self.tree.selection())['text'][0]
 
         self.edit_wind = Toplevel()
-        self.edit_wind.title('title', 'Edit status:')
+        self.edit_wind.title('Edit status')
 
-        # query = 'DELETE FROM books WHERE title=?'
-        # self.run_query(query, (title,))
-        # self.message['text'] = 'The Book {} was deleted'.format(title)
+        screen_width = self.edit_wind.winfo_screenwidth()
+        screen_height = self.edit_wind.winfo_screenheight()
+        width = 350
+        height = 200
 
-        # self.viewing_records()
+        x = (screen_width/2) - (width/2)
+        y = (screen_height/2) - (height/2)
+
+        self.edit_wind.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        self.edit_wind.resizable(0, 0)
+
+        self.edit_wind.configure(bg='Snow2')
 
 
 if __name__ == "__main__":
