@@ -34,7 +34,7 @@ class Book:
         ttk.Button(frame, text='Register', command=self.adding).grid(
             row=5, columnspan=2, stick=W+E)
         self.message = Label(text='', fg='red')
-        self.message.grid(row=3, column=0)
+        self.message.grid(row=2, column=0)
 
         self.tree = ttk.Treeview(height=10, columns=("#0", "#1", "#2"))
         self.tree.grid(row=4, column=0, columnspan=2)
@@ -128,6 +128,30 @@ class Book:
         self.edit_wind.resizable(0, 0)
 
         self.edit_wind.configure(bg='Snow2')
+
+        Label(self.edit_wind, text='Book:', bg='Snow2').grid(row=0, column=1)
+        Entry(self.edit_wind, textvariable=StringVar(self.edit_wind,
+                                                     value=title), state='readonly').grid(row=0, column=2)
+        new_title = Entry(self.edit_wind)
+        new_title.grid(row=1, column=2)
+
+        Label(self.edit_wind, text='Status:', bg='Snow2').grid(row=2, column=1)
+        Entry(self.edit_wind, textvariable=DoubleVar(self.edit_wind,
+                                                     value=old_status), state='readonly').grid(row=2, column=2)
+        new_status = Entry(self.edit_wind)
+        new_status.grid(row=3, column=2)
+
+        ttk.Button(self.edit_wind, text='Update', command=lambda: self.edit_records(
+            new_title.get(), title, new_status.get(),  old_status)).grid(row=4, column=2, sticky=W)
+        self.edit_wind.mainloop()
+
+    def edit_records(self, new_title, new_status, title, old_status):
+        query = 'UPDATE books SET title=?,status=? WHERE title=? AND status=?'
+        parameters = (new_title, new_status, title, old_status)
+        self.run_query(query, parameters)
+        self.edit_wind.destroy()
+        self.message['text'] = 'Status {} book was UPDATED'.format(title)
+        self.viewing_records()
 
 
 if __name__ == "__main__":
