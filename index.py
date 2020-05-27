@@ -31,8 +31,10 @@ class Book:
         self.status = Entry(frame)
         self.status.grid(row=4, column=1)
 
-        ttk.Button(frame, text='Register').grid(
+        ttk.Button(frame, text='Register', command=self.adding).grid(
             row=5, columnspan=2, stick=W+E)
+        self.message = Label(text='', fg='red')
+        self.message.grid(row=3, column=0)
 
         self.tree = ttk.Treeview(height=10, columns=("#0", "#1", "#2"))
         self.tree.grid(row=4, column=0, columnspan=2)
@@ -60,11 +62,25 @@ class Book:
             self.tree.insert('', 2, text=row[1], values=(
                 row[2], row[3], row[4]))
 
-        def validation(self):
-            return
-            len(self.title.get, self.author.get()) != 0,
-            # len(self.genre.get()) != 0,
-            # len(self.status.get())
+    def validation(self):
+        return len(self.title.get()) != 0 and len(self.author.get()) != 0 and len(self.genre.get()) != 0 and len(self.status.get()) != 0
+
+    def adding(self):
+
+        if self.validation():
+            query = 'INSERT INTO books VALUES (NULL, ?, ?, ?, ?)'
+            parameters = (self.title.get(), self.author.get(),
+                          self.genre.get(), self.status.get())
+            self.run_query(query, parameters)
+            self.message['text'] = 'Book {} added'.format(
+                self.title.get())
+            self.title.delete(0, END)
+            self.author.delete(0, END)
+            self.genre.delete(0, END)
+            self.status.delete(0, END)
+        else:
+            self.message['text'] = 'Sorry, all fields are required!'
+        self.viewing_records()
 
 
 if __name__ == "__main__":
