@@ -45,6 +45,8 @@ class Book:
 
         ttk.Button(frame, text='Delete', command=self.deleting).grid(
             row=7, column=0)
+        ttk.Button(frame, text='Edit', command=self.editing).grid(
+            row=7, column=1)
 
         self.viewing_records()
 
@@ -86,12 +88,11 @@ class Book:
         self.viewing_records()
 
     def deleting(self):
-
         self.message['text'] = ''
         try:
-            self.tree.item(self.tree.selection())['text']
+            self.tree.item(self.tree.selection())['text'][0]
         except IndexError as e:
-            self.message['text'] = 'please, you need chosen a book to delete'
+            self.message['text'] = 'please, you need chosen a book to delete:'
             return
         self.message['text'] = ''
         title = self.tree.item(self.tree.selection())['text']
@@ -100,6 +101,26 @@ class Book:
         self.message['text'] = 'The Book {} was deleted'.format(title)
 
         self.viewing_records()
+
+    def editing(self):
+
+        self.message['text'] = ''
+        try:
+            self.tree.item(self.tree.selection())['text'][0]
+        except IndexError as e:
+            self.message['text'] = 'please, you need chosen a book to edit'
+            return
+        title = self.tree.item(self.tree.selection())['text']
+        old_status = self.tree.item(self.tree.selection())['text'][0]
+
+        self.edit_wind = Toplevel()
+        self.edit_wind.title('title', 'Edit status:')
+
+        # query = 'DELETE FROM books WHERE title=?'
+        # self.run_query(query, (title,))
+        # self.message['text'] = 'The Book {} was deleted'.format(title)
+
+        # self.viewing_records()
 
 
 if __name__ == "__main__":
