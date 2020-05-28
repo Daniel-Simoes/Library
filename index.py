@@ -106,12 +106,12 @@ class Book:
 
         self.message['text'] = ''
         try:
-            self.tree.item(self.tree.selection())['text'][0]
+            self.tree.item(self.tree.selection())['values'][0]
         except IndexError as e:
             self.message['text'] = 'please, you need chosen a book to edit'
             return
         title = self.tree.item(self.tree.selection())['text']
-        old_status = self.tree.item(self.tree.selection())['text'][0]
+        old_status = self.tree.item(self.tree.selection())['values'][2]
 
         self.edit_wind = Toplevel()
         self.edit_wind.title('Edit status')
@@ -132,25 +132,23 @@ class Book:
         Label(self.edit_wind, text='Book:', bg='Snow2').grid(row=0, column=1)
         Entry(self.edit_wind, textvariable=StringVar(self.edit_wind,
                                                      value=title), state='readonly').grid(row=0, column=2)
-        new_title = Entry(self.edit_wind)
-        new_title.grid(row=1, column=2)
 
         Label(self.edit_wind, text='Status:', bg='Snow2').grid(row=2, column=1)
-        Entry(self.edit_wind, textvariable=DoubleVar(self.edit_wind,
-                                                     value=old_status), state='readonly').grid(row=2, column=2)
+        Entry(self.edit_wind, textvariable=StringVar(self.edit_wind,
+                                                     value=old_status)).grid(row=2, column=2)
         new_status = Entry(self.edit_wind)
-        new_status.grid(row=3, column=2)
+        new_status.grid(row=2, column=2)
 
         ttk.Button(self.edit_wind, text='Update', command=lambda: self.edit_records(
-            new_title.get(), title, new_status.get(),  old_status)).grid(row=4, column=2, sticky=W)
+            new_status.get(),  old_status)).grid(row=4, column=2, sticky=W)
         self.edit_wind.mainloop()
 
-    def edit_records(self, new_title, new_status, title, old_status):
-        query = 'UPDATE books SET title=?,status=? WHERE title=? AND status=?'
-        parameters = (new_title, new_status, title, old_status)
+    def edit_records(self, new_status, old_status):
+        query = 'UPDATE books SET status=? WHERE status=?'
+        parameters = (new_status, old_status)
         self.run_query(query, parameters)
         self.edit_wind.destroy()
-        self.message['text'] = 'Status {} book was UPDATED'.format(title)
+        self.message['text'] = 'Status book was UPDATED'
         self.viewing_records()
 
 
